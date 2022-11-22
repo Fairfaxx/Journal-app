@@ -1,13 +1,14 @@
-import { MailOutline } from '@mui/icons-material'
-import { Typography } from '@mui/material'
-import React from 'react'
+import { MailOutline } from '@mui/icons-material';
+import { Typography } from '@mui/material';
+import React from 'react';
+import JournalLayout from '../layout/JournalLayout';
 
 const JournalPage = () => {
   return (
-    <> 
-    <Typography variant='h1'>JournalPage</Typography>
-    </>
-  )
-}
+    <JournalLayout>
+      <Typography>Pariatur cillum pariatur elit non proident.</Typography>
+    </JournalLayout>
+  );
+};
 
-export default JournalPage
+export default JournalPage;
