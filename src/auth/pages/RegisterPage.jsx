@@ -1,14 +1,23 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from '../../hooks/useForm';
 import { Google } from '@mui/icons-material';
-import { Button, Grid, Link, TextField, Typography } from '@mui/material';
+import {
+  Alert,
+  Button,
+  Grid,
+  Link,
+  TextField,
+  Typography,
+} from '@mui/material';
 import AuthLayout from '../layout/AuthLayout';
+import { startCreatingUserWithEmailPassword } from '../../store/auth/thunks';
 
 const formData = {
-  email: 'fede.lemaire@gmail.com',
-  password: '1234567',
-  displayName: 'Fefe Lemaire',
+  email: '',
+  password: '',
+  displayName: '',
 };
 
 const formValidations = {
@@ -40,11 +49,22 @@ const RegisterPage = () => {
   } = useForm(formData, formValidations);
 
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const dispatch = useDispatch();
+  const { status, errorMessage } = useSelector((state) => state.auth);
+  console.log(errorMessage);
+  const isCheckingAuthentication = useMemo(
+    () => status === 'checking',
+    [status]
+  );
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
     setFormSubmitted(true);
+
+    if (!isFormValid) return;
     console.log(formState);
+
+    dispatch(startCreatingUserWithEmailPassword(formState));
   };
 
   return (
@@ -91,8 +111,16 @@ const RegisterPage = () => {
             />
           </Grid>
           <Grid container spacing={2} sx={{ mb: 2, mt: 1 }}>
+            <Grid display={!!errorMessage ? '' : 'none'} item xs={12}>
+              <Alert severity="error"> {errorMessage} </Alert>
+            </Grid>
             <Grid item xs={12}>
-              <Button type="submit" variant="contained" fullWidth>
+              <Button
+                disabled={isCheckingAuthentication}
+                type="submit"
+                variant="contained"
+                fullWidth
+              >
                 Login
               </Button>
             </Grid>
