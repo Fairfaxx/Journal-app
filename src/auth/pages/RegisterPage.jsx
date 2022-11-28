@@ -51,7 +51,6 @@ const RegisterPage = () => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const dispatch = useDispatch();
   const { status, errorMessage } = useSelector((state) => state.auth);
-  console.log(errorMessage);
   const isCheckingAuthentication = useMemo(
     () => status === 'checking',
     [status]
@@ -62,14 +61,16 @@ const RegisterPage = () => {
     setFormSubmitted(true);
 
     if (!isFormValid) return;
-    console.log(formState);
 
     dispatch(startCreatingUserWithEmailPassword(formState));
   };
 
   return (
     <AuthLayout title="Register">
-      <form onSubmit={onSubmitHandler}>
+      <form
+        className="animate__animated animate__fadeIn animate__faster"
+        onSubmit={onSubmitHandler}
+      >
         <Grid container spacing={2}>
           <Grid item xs={12} sx={{ mt: 2 }}>
             <TextField

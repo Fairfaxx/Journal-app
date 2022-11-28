@@ -1,6 +1,7 @@
 import { TurnedInNot } from '@mui/icons-material';
 import {
   Box,
+  CircularProgress,
   Divider,
   Drawer,
   Grid,
@@ -12,8 +13,11 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
+import { useSelector } from 'react-redux';
 
 const SideBar = ({ drawerWidth = 240 }) => {
+  const { displayName } = useSelector((state) => state.auth);
+
   return (
     <Box
       component="nav"
@@ -29,7 +33,7 @@ const SideBar = ({ drawerWidth = 240 }) => {
       >
         <Toolbar>
           <Typography variant="h5" noWrap component="div">
-            Fefe Lemaire
+            {displayName}
           </Typography>
         </Toolbar>
         <Divider />
