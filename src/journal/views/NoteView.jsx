@@ -1,9 +1,30 @@
 import { SaveOutlined } from '@mui/icons-material';
 import { Button, Grid, TextField, Typography } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useForm } from '../../hooks/useForm';
+import { setActiveNote } from '../../store/journal/journalSlice';
+import { startSaveNote } from '../../store/journal/thunks';
 import ImageGallery from '../components/ImageGallery';
 
 const NoteView = () => {
+  const { active: note } = useSelector((state) => state.journal);
+  const dispatch = useDispatch();
+  const { title, body, date, onInputChange, formState } = useForm(note);
+
+  useEffect(() => {
+    dispatch(setActiveNote(formState));
+  }, [formState]);
+
+  const dateString = useMemo(() => {
+    const newDate = new Date(date);
+    return newDate.toUTCString();
+  }, [date]);
+
+  const onSaveNote = () => {
+    dispatch(startSaveNote());
+  };
+
   return (
     <Grid
       container
@@ -15,11 +36,11 @@ const NoteView = () => {
     >
       <Grid item>
         <Typography fontSize={39} fontWeight="light">
-          September 19th of 2022
+          {dateString}
         </Typography>
       </Grid>
       <Grid item>
-        <Button color="primary" sx={{ padding: 2 }}>
+        <Button onClick={onSaveNote} color="primary" sx={{ padding: 2 }}>
           <SaveOutlined sx={{ fontSize: 30, mr: 1 }} />
           Save
         </Button>
@@ -32,6 +53,9 @@ const NoteView = () => {
           placeholder="Insert a title here"
           label="Title here"
           sx={{ border: 'none', mb: 1 }}
+          name="title"
+          value={title}
+          onChange={onInputChange}
         />
         <TextField
           type="text"
@@ -40,6 +64,9 @@ const NoteView = () => {
           multiline
           placeholder="What's happened today?"
           minRows={5}
+          name="body"
+          value={body}
+          onChange={onInputChange}
         />
       </Grid>
       <ImageGallery />
